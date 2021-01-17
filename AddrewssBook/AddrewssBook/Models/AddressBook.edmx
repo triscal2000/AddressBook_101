@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AddressBookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="entries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhonebookId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="phonebook">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_entries_phonebook">
+          <End Role="phonebook" Type="Self.phonebook" Multiplicity="1" />
+          <End Role="entries" Type="Self.entries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="phonebook">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="entries">
+              <PropertyRef Name="PhonebookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AddressBookModelStoreContainer">
+          <EntitySet Name="entries" EntityType="Self.entries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="phonebook" EntityType="Self.phonebook" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_entries_phonebook" Association="Self.FK_entries_phonebook">
+            <End Role="phonebook" EntitySet="phonebook" />
+            <End Role="entries" EntitySet="entries" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AddressBookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="entry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhonebookId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="phonebook" Relationship="Self.FK_entries_phonebook" FromRole="entries" ToRole="phonebook" />
+        </EntityType>
+        <EntityType Name="phonebook">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="entries" Relationship="Self.FK_entries_phonebook" FromRole="phonebook" ToRole="entries" />
+        </EntityType>
+        <Association Name="FK_entries_phonebook">
+          <End Role="phonebook" Type="Self.phonebook" Multiplicity="1" />
+          <End Role="entries" Type="Self.entry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="phonebook">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="entries">
+              <PropertyRef Name="PhonebookId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AddressBookEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="entries" EntityType="Self.entry" />
+          <EntitySet Name="phonebooks" EntityType="Self.phonebook" />
+          <AssociationSet Name="FK_entries_phonebook" Association="Self.FK_entries_phonebook">
+            <End Role="phonebook" EntitySet="phonebooks" />
+            <End Role="entries" EntitySet="entries" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AddressBookModelStoreContainer" CdmEntityContainer="AddressBookEntities">
+          <EntitySetMapping Name="entries">
+            <EntityTypeMapping TypeName="AddressBookModel.entry">
+              <MappingFragment StoreEntitySet="entries">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhonebookId" ColumnName="PhonebookId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="phonebooks">
+            <EntityTypeMapping TypeName="AddressBookModel.phonebook">
+              <MappingFragment StoreEntitySet="phonebook">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
